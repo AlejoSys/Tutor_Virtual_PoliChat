@@ -1,0 +1,27 @@
+{
+  "name": "chatbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "chroma": "py -3.12 -c \"from chromadb.cli.cli import app; app()\" run --path ./chroma_data",
+    "gemini": "node src/Prueba-Gemini.js",
+    "base": "node src/base-vectorial.js",
+    "preguntar": "node src/preguntar.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@langchain/community": "^1.1.29",
+    "@langchain/core": "^1.4.0",
+    "@langchain/google-genai": "^2.3.6",
+    "@langchain/textsplitters": "^1.0.2",
+    "chromadb": "^3.5.0",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "langchain": "^1.6.5",
+    "pdf-parse": "^2.4.5"
+  }
+}
