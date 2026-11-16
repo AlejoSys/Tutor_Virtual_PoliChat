@@ -2,7 +2,7 @@ import "dotenv/config";
 import path from "node:path";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { Chroma } from "@langchain/community/vectorstores/chroma";
-import { cargarYTrocear } from "./cargar-pdf.js";
+import { CargarYFragmentar } from "./cargar-pdf.js";
 
 // Modelo que convierte texto en vectores (listas de números que representan el significado)
 const embeddings = new GoogleGenerativeAIEmbeddings({
@@ -24,9 +24,9 @@ const baseVectorial = new Chroma(embeddings, {
 });
 
 try {
-  // 1. Leer los PDFs y partirlos en fragmentos (paso 1)
+  // 1. Leer los PDFs y partirlos en fragmentos.
   console.log("Leyendo PDFs...");
-  const fragmentos = await cargarYTrocear();
+  const fragmentos = await CargarYFragmentar();
 
   // 2. Dejar solo los metadatos que nos interesan. Chroma no acepta datos anidados,
   //    y PDFLoader mete mucha información del PDF que no necesitamos.
@@ -50,7 +50,7 @@ try {
   console.log("¡Listo! Fragmentos guardados.");
 
   // 5. Prueba rápida: buscar los 2 fragmentos que más se parecen a una pregunta
-  const pregunta = "¿Cuántas cámaras tiene la tienda?";
+  const pregunta = "¿Qué secciones debe tener el trabajo de grado?";
   console.log(`\nPrueba de búsqueda: "${pregunta}"`);
   const resultados = await baseVectorial.similaritySearch(pregunta, 2);
   for (const doc of resultados) {

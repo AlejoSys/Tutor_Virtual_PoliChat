@@ -9,15 +9,14 @@ const CARPETA_DOCS = "docs";
 
 // Lee todos los PDFs de la carpeta y los parte en fragmentos
 // La exportamos para reutilizarla en el paso 3
-export async function cargarYTrocear(carpeta = CARPETA_DOCS) {
+export async function CargarYFragmentar(carpeta = CARPETA_DOCS) {
   // 1. Buscar los PDFs de la carpeta
   const archivos = (await readdir(carpeta)).filter((a) => a.toLowerCase().endsWith(".pdf"));
   if (archivos.length === 0) {
     throw new Error(`No hay ningún PDF en la carpeta "${carpeta}"`);
   }
 
-  // 2. Extraer el texto. PDFLoader devuelve un "documento" por cada página,
-  //    con el texto en .pageContent y datos como el archivo y la página en .metadata
+  // 2. Extraer el texto. PDFLoader devuelve un "documento" por cada página.
   const paginas = [];
   for (const archivo of archivos) {
     const loader = new PDFLoader(path.join(carpeta, archivo));
@@ -26,7 +25,7 @@ export async function cargarYTrocear(carpeta = CARPETA_DOCS) {
     paginas.push(...docs);
   }
 
-  // 3. Partir en fragmentos. Cada fragmento tiene como máximo 1000 caracteres,
+  // 3. Dividirnp en fragmentos. Cada fragmento tiene como máximo 1000 caracteres,
   //    y se solapa 200 con el anterior para no cortar una idea por la mitad.
   const splitter = new RecursiveCharacterTextSplitter({
     chunkSize: 1000,
@@ -36,11 +35,11 @@ export async function cargarYTrocear(carpeta = CARPETA_DOCS) {
 }
 
 // Esto solo se ejecuta al lanzar el archivo directamente (node src/cargar-pdf.js),
-// no cuando otro archivo importa cargarYTrocear
+// no cuando otro archivo importa CargarYFragmentar
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
     console.log(`Leyendo PDFs de la carpeta "${CARPETA_DOCS}"...`);
-    const fragmentos = await cargarYTrocear();
+    const fragmentos = await CargarYFragmentar();
     console.log(`\nTotal: ${fragmentos.length} fragmentos`);
     console.log("\nEjemplo, el primer fragmento:");
     console.log("Texto:", fragmentos[0].pageContent);
